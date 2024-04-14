@@ -31,8 +31,12 @@ jobs:
 
     - name: Create and checkout deployment branch
       run: git checkout -b deployment
-    - run: git rm -rf .
-    - run: git clean -fxd
+
+    - name: Remove non-build files
+      run: |
+        shopt -s extglob
+        rm -rf !(build)
+        git clean -fxd
       
     - name: Move build files to root directory
       run: mv build/* .
