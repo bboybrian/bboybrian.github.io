@@ -28,3 +28,24 @@ jobs:
         cache: 'npm'
     - run: npm install
     - run: npm run build
+
+    - name: Create and checkout deployment branch
+        run: |
+          git checkout -b deployment
+          git rm -rf .
+          git clean -fxd
+      
+      - name: Move build files to root directory
+        run: mv build/* .
+      
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: deployment
